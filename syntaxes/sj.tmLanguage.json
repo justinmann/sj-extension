@@ -1,0 +1,242 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "sj",
+	"patterns": [
+		{
+			"include": "#operators"
+		},
+		{
+			"include": "#strings"
+		},
+		{
+			"include": "#c-blocks"
+		},
+		{
+			"include": "#numbers"
+		},
+		{
+			"include": "#function-call"
+		},
+		{
+			"include": "#comments"
+		},
+		{
+			"include": "#types"
+		},
+		{
+			"include": "#block"
+		},
+		{
+			"include": "#variables"
+		},
+		{
+			"match": "\\b(true|false|void)\\b",
+			"name": "constant.language.sj"
+		},
+		{
+			"match": "\\b(default|else|for|if|switch|while|ifValid|elseEmpty)\\b",
+			"name": "keyword.control.sj"
+		}
+	],
+	"repository": {
+		"block": {
+			"patterns": [
+				{
+					"begin": "{",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.section.block.begin.bracket.curly.sj"
+						}
+					},
+					"end": "}|(?=\\s*#\\s*(?:elif|else|endif)\\b)",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.section.block.end.bracket.curly.sj"
+						}
+					},
+					"name": "meta.block.sj",
+					"patterns": [
+						{
+							"include": "#block_innards"
+						}
+					]
+				}
+			]
+		},
+		"function-call": {
+			"begin": "([A-Za-z_][\\w!\\[\\],\\s#]*)(\\()",
+			"beginCaptures": {
+				"1": {
+					"name": "entity.name.function.sj"
+				},
+				"2": {
+					"name": "punctuation.definition.parameters.begin.bracket.round.sj"
+				}
+			},
+			"end": "\\)",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.definition.parameters.end.bracket.round.sj"
+				}
+			},
+			"name": "meta.function-call.sj",
+			"patterns": [
+				{
+					"include": "$base"
+				}
+			]
+		},
+		"variables": {
+			"match": "[A-Za-z_][\\w]*",
+			"name": "variable.other.object.sj"
+		},
+		"types": {
+			"match": "'[A-Za-z_][\\w!\\[\\],\\s#]*",
+			"name": "storage.type.sj"
+		},
+		"block_innards": {
+			"patterns": [
+				{
+					"include": "#function_call"
+				},
+				{
+					"include": "#c-blocks"
+				},
+				{
+					"captures": {
+						"1": {
+							"name": "variable.other.sj"
+						},
+						"2": {
+							"name": "punctuation.definition.parameters.sj"
+						}
+					},
+					"match": "(?x)\n(?:\n  (?:\n    (?=\\s)(?<!else|new|return)\n    (?<=\\w) \\s+  # or word + space before name\n  )\n)\n(\n  (?:[A-Za-z_][A-Za-z0-9_]*+ | :: )++   # actual name\n  |\n  (?:(?<=operator) (?:[-*&<>=+!]+ | \\(\\) | \\[\\]))\n)\n\\s*(\\() # opening bracket",
+					"name": "meta.initialization.sj"
+				},
+				{
+					"begin": "{",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.section.block.begin.bracket.curly.sj"
+						}
+					},
+					"end": "}|(?=\\s*#\\s*(?:elif|else|endif)\\b)",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.section.block.end.bracket.curly.sj"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#block_innards"
+						}
+					]
+				},
+				{
+					"include": "#parens-block"
+				},
+				{
+					"include": "$base"
+				}
+			]
+		},
+		"numbers": {
+			"patterns": [
+				{
+					"match": "\\b((0(x|X)[0-9a-fA-F]([0-9a-fA-F']*[0-9a-fA-F])?)|(0(b|B)[01]([01']*[01])?)|(([0-9]([0-9']*[0-9])?\\.?[0-9]*([0-9']*[0-9])?)|(\\.[0-9]([0-9']*[0-9])?))((e|E)(\\+|-)?[0-9]([0-9']*[0-9])?)?)(L|l|UL|ul|u|U|F|f|ll|LL|ull|ULL)?\\b",
+					"name": "constant.numeric.sj"
+				}
+			]
+		},
+		"operators": {
+			"patterns": [
+				{
+					"match": "--",
+					"name": "keyword.operator.decrement.sj"
+				},
+				{
+					"match": "\\+\\+",
+					"name": "keyword.operator.increment.sj"
+				},
+				{
+					"match": "%=|\\+=|-=|\\*=|(?<!\\()/=",
+					"name": "keyword.operator.assignment.compound.sj"
+				},
+				{
+					"match": "!=|<=|>=|==|<|>",
+					"name": "keyword.operator.comparison.sj"
+				},
+				{
+					"match": "&&|!|\\|\\|",
+					"name": "keyword.operator.logical.sj"
+				},
+				{
+					"match": ":|:=|=",
+					"name": "keyword.operator.assignment.sj"
+				},
+				{
+					"match": "%|\\*|/|-|\\+",
+					"name": "keyword.operator.sj"
+				}
+			]
+		},
+		"strings": {
+			"name": "string.quoted.double.sj",
+			"begin": "\"",
+			"end": "\"",
+			"patterns": [
+				{
+					"name": "constant.character.escape.sj",
+					"match": "\\\\."
+				}
+			]
+		},
+		"comments": {
+			"patterns" : [
+				{
+					"begin": "/\\*",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.definition.comment.begin.sj"
+						}
+					},
+					"end": "\\*/",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.definition.comment.end.sj"
+						}
+					},
+					"name": "comment.block.sj"
+				},
+				{
+					"begin": "(^[ \\t]+)?(?=//)",
+					"beginCaptures": {
+						"1": {
+							"name": "punctuation.whitespace.comment.leading.sj"
+						}
+					},
+					"end": "(?!\\G)",
+					"patterns": [
+						{
+							"begin": "//",
+							"beginCaptures": {
+								"0": {
+									"name": "punctuation.definition.comment.sj"
+								}
+							},
+							"end": "(?=\\n)",
+							"name": "comment.line.double-slash.sj"
+						}
+					]
+				}
+			]
+		},
+		"c-blocks": {
+			"name": "meta.embedded.sj",
+			"begin": "--c--",
+			"end": "--c--"
+		}
+	},
+	"scopeName": "source.js"
+}

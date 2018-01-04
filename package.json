@@ -1,0 +1,26 @@
+{
+    "name": "sj",
+    "displayName": "sj",
+    "description": "sj language support",
+    "version": "0.0.1",
+    "publisher": "sj-lang",
+    "engines": {
+        "vscode": "^1.19.0"
+    },
+    "categories": [
+        "Languages"
+    ],
+    "contributes": {
+        "languages": [{
+            "id": "sj",
+            "aliases": ["sj", "sj"],
+            "extensions": ["sj"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "sj",
+            "scopeName": "source.js",
+            "path": "./syntaxes/sj.tmLanguage.json"
+        }]
+    }
+}
